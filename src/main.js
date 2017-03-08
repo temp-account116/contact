@@ -6,9 +6,11 @@ import router from './router'
 
 import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
+import VeeValidate from 'vee-validate';
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
+Vue.use(VeeValidate)
 
 import 'bootstrap/dist/css/bootstrap.css'
 Vue.config.productionTip = false
