@@ -36,7 +36,10 @@
                     </td>
                     <td>
                       {{ contact.description }}
-                    </td>                    
+                    </td>
+                    <td>
+                       <button type="button" class="btn btn-danger"  v-on:click="destroy(contact.id)">Destroy</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -122,6 +125,16 @@
                   this.$http.post(url, this.contact);
               }
             return false;
+          },
+          destroy: function(id){
+             var url = 'http://localhost:8089/contacts';
+             this.$http.delete(url + "/" + id).then(function(response){
+                  this.contacts = this.contacts.filter(function (contact) {
+                      return contact.id != id;
+                  });
+             },function(){
+               // TODO: handle error
+             });
           }
         }
     }
