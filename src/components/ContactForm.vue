@@ -102,9 +102,6 @@
     export default {
         name : 'Contact',
         url : 'http://localhost:8089/contacts',
-        ready: function(){
-            console.log("ready");
-        },
         data() {
             var url = 'http://localhost:8089/contacts';
             this.$http.get(url).then(function(response){
@@ -118,11 +115,18 @@
         methods: {
           onSubmit: function(e) {
               // TODO: find a better to check error
+              var url = 'http://localhost:8089/contacts';
               if( !!!this.contact.email || !!!this.contact.first_name || !!!this.contact.last_name || !!!this.contact.description){
                   console.log("Contact has error");
-                  // handle error
+                  // TODO: handle error
               }else{
-                  this.$http.post(url, this.contact);
+                  this.$http.post(url, this.contact).then(function(data){
+                    this.contact = {date : '', totalTime : '', comment : ''};
+                    // TODO: add new data to contacts
+                    // I can't get id ...
+                  }, function(){
+                  // TODO: handle error
+                  });
               }
             return false;
           },
