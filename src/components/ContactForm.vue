@@ -1,4 +1,47 @@
 <template>
+    <div class="contact col-md-8" >
+        <table class="table col-sm-offset-2">
+            <thead>
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        First Name
+                    </th>
+                    <th>
+                        Last Name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Description
+                    </th>            
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="contact in contacts">
+                    <th scope="row">
+                      {{ contact.id }}
+                    </th>
+                    <td>
+                      {{ contact.first_name }}
+                    </td>
+                    <td>
+                      {{ contact.last_name }}
+                    </td>
+                    <td>
+                      {{ contact.email }}
+                    </td>
+                    <td>
+                      {{ contact.description }}
+                    </td>                    
+                </tr>
+            </tbody>
+        </table>
+
+
     <form class="form-horizontal" action="http://localhost:8089/contacts" method="post" v-on:submit.prevent="onSubmit">
         <div class="form-group">
             <label class="control-label col-sm-2" for="email">
@@ -49,16 +92,25 @@
             </div>
         </div>
     </form>
+    </div>
 </template>
 
 <script>
     export default {
         name : 'Contact',
+        url : 'http://localhost:8089/contacts',
         ready: function(){
-            return {}
+            console.log("ready");
         },
         data() {
-            return {'contact': {date : '', totalTime : '', comment : ''} }
+            var url = 'http://localhost:8089/contacts';
+            this.$http.get(url).then(function(response){
+               this.contacts = response.body;
+            }, function(error){
+               // TODO: handle error
+            });
+            return { 'contact': {date : '', totalTime : '', comment : ''},
+                     'contacts': [] }
         },
         methods: {
           onSubmit: function(e) {
@@ -67,7 +119,6 @@
                   console.log("Contact has error");
                   // handle error
               }else{
-                  var url = "http://localhost:8089/contacts"
                   this.$http.post(url, this.contact);
               }
             return false;
