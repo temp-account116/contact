@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
+// TODO: replace me with index 
+import ContactForm from '@/components/ContactForm'
+
 
 Vue.use(Router)
 
@@ -8,8 +10,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Hello',
-      component: Hello
+      name: 'ContactForm',
+      component: ContactForm
     }
   ]
 })
