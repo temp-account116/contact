@@ -5,7 +5,9 @@
                 Email:
             </label>
             <div class="col-sm-10">
-                <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" v-model="contact.email"/>
+                <input v-validate="'required|email'"
+                    :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" placeholder="Email" class="form-control" v-model="contact.email">
+                <span v-show="errors.has('email')" class="pull-left help is-danger">{{ errors.first('email') }}</span>
             </div>
         </div>
         <div class="form-group">
@@ -13,7 +15,9 @@
                 First Name:
             </label>
             <div class="col-sm-10">
-                <input type="First Name" class="form-control" placeholder="Enter First Name" name="first_name" v-model="contact.first_name"/>
+                <input type="First Name" class="form-control" placeholder="Enter First Name" name="first_name" v-model="contact.first_name" v-validate="'required'"
+                    :class="{'input': true, 'is-danger': errors.has('first_name') }" />
+                <span v-show="errors.has('first_name')" class="pull-left help is-danger">{{ errors.first('first_name') }}</span>
             </div>
         </div>
         <div class="form-group">
@@ -21,7 +25,9 @@
                 Last Name:
             </label>
             <div class="col-sm-10">
-                <input type="First Name" class="form-control" placeholder="Enter Last Name" name="last_name" v-model="contact.last_name"/>
+                 <input class="form-control" placeholder="Enter Last Name" name="last_name" v-model="contact.last_name" v-validate="'required'"
+                        :class="{'input': true, 'is-danger': errors.has('last_name') }" />
+                 <span v-show="errors.has('last_name')" class="pull-left help is-danger">{{ errors.first('last_name') }}</span>
             </div>
         </div>
         <div class="form-group">
@@ -29,13 +35,15 @@
                 Description:
             </label>
             <div class="col-sm-10">
-                <textarea class="form-control" rows="3" placeholder="Description" name="description" v-model="contact.description">
+                <textarea class="form-control" rows="3" placeholder="Description" name="description" v-model="contact.description"
+                    v-validate="'required'" :class="{'input': true, 'is-danger': errors.has('last_name') }">
                 </textarea>
+                <span v-show="errors.has('description')" class="pull-left help is-danger">{{ errors.first('description') }}</span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default" @click="onSubmit()">
+                <button type="submit" class="btn btn-default">
                     Submit
                 </button>
             </div>
@@ -54,8 +62,15 @@
         },
         methods: {
           onSubmit: function(e) {
-            var url = "http://localhost:8089/contacts"
-            this.$http.post(url, this.contact);
+              // TODO: find a better to check error
+              if( !!!this.contact.email || !!!this.contact.first_name || !!!this.contact.last_name || !!!this.contact.description){
+                  console.log("Contact has error");
+                  // handle error
+              }else{
+                  var url = "http://localhost:8089/contacts"
+                  this.$http.post(url, this.contact);
+              }
+            return false;
           }
         }
     }
