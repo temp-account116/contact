@@ -17,7 +17,10 @@
                     </th>
                     <th>
                         Description
-                    </th>            
+                    </th>
+                    <th>
+                        Actions
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +42,7 @@
                     </td>
                     <td>
                        <button type="button" class="btn btn-danger"  v-on:click="destroy(contact.id)">Destroy</button>
+                       <button type="button" class="btn"  v-on:click="clickEditButton(contact.id)">Edit</button>
                     </td>
                 </tr>
             </tbody>
@@ -46,6 +50,7 @@
 
 
     <form class="form-horizontal" action="http://localhost:8089/contacts" method="post" v-on:submit.prevent="onSubmit">
+       <input class="form-control hidden" v-model="contact.id">
         <div class="form-group">
             <label class="control-label col-sm-2" for="email">
                 Email:
@@ -120,13 +125,21 @@
                   console.log("Contact has error");
                   // TODO: handle error
               }else{
-                  this.$http.post(url, this.contact).then(function(data){
-                    this.contact = {date : '', totalTime : '', comment : ''};
-                    // TODO: add new data to contacts
-                    // I can't get id ...
-                  }, function(){
-                  // TODO: handle error
+                  // rails handle `create`/`update` in one form, hope I can do similary thing in vue...
+                  if(!!this.contact.id){
+                    this.$http.put(url + '/' + this.contact.id, this.contact).then(function(data){
+                      this.contact = {date : '', totalTime : '', comment : ''};
+                    }, function(){
+                    });
+                  }else{
+                    this.$http.post(url, this.contact).then(function(data){
+                      this.contact = {date : '', totalTime : '', comment : ''};
+                      // TODO: add new data to contacts
+                      // I can't get id ...
+                    }, function(){
+                      // TODO: handle error
                   });
+                  }
               }
             return false;
           },
@@ -139,6 +152,13 @@
              },function(){
                // TODO: handle error
              });
+          },
+          clickEditButton: function(id){
+            var contact = _.find(this.contacts, function(contact){
+              return contact.id == id
+            });
+
+            this.contact = contact;
           }
         }
     }
