@@ -7,6 +7,7 @@ import router from './router'
 import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
 import VeeValidate from 'vee-validate';
+import _ from 'lodash'
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
