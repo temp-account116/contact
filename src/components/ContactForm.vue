@@ -41,8 +41,8 @@
                       {{ contact.description }}
                     </td>
                     <td>
+                       <button type="button" class="btn btn-primary"  v-on:click="clickEditButton(contact.id)">Edit</button>
                        <button type="button" class="btn btn-danger"  v-on:click="destroy(contact.id)">Destroy</button>
-                       <button type="button" class="btn"  v-on:click="clickEditButton(contact.id)">Edit</button>
                     </td>
                 </tr>
             </tbody>
@@ -128,14 +128,15 @@
                   // rails handle `create`/`update` in one form, hope I can do similary thing in vue...
                   if(!!this.contact.id){
                     this.$http.put(url + '/' + this.contact.id, this.contact).then(function(data){
-                      this.contact = {date : '', totalTime : '', comment : ''};
+                      this.contact = { date : '', totalTime : '', comment : '' };
                     }, function(){
                     });
                   }else{
                     this.$http.post(url, this.contact).then(function(data){
-                      this.contact = {date : '', totalTime : '', comment : ''};
-                      // TODO: add new data to contacts
-                      // I can't get id ...
+                      this.contact.id = data.body.id;
+                      this.contacts.push(this.contact);
+
+                      this.contact = { date : '', totalTime : '', comment : '' };
                     }, function(){
                       // TODO: handle error
                   });
