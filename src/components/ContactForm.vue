@@ -113,7 +113,7 @@
             this.$http.get(url).then(function(response){
                this.contacts = response.body;
             }, function(error){
-               // TODO: handle error
+               this.$swal({text: "Cannot load contacts.", type: "error"});
             });
             return { 'contact': {date : '', totalTime : '', comment : ''},
                      'contacts': [] }
@@ -123,14 +123,15 @@
               // TODO: find a better to check error
               var url = 'http://localhost:8089/contacts';
               if( !!!this.contact.email || !!!this.contact.first_name || !!!this.contact.last_name || !!!this.contact.description){
-                  console.log("Contact has error");
-                  // TODO: handle error
+                 this.$swal({text: "Invalid input", type: "error"});
               }else{
                   // rails handle `create`/`update` in one form, hope I can do similary thing in vue...
                   if(!!this.contact.id){
                     this.$http.put(url + '/' + this.contact.id, this.contact).then(function(data){
                       this.contact = { date : '', totalTime : '', comment : '' };
+                      this.$swal({text: "Updated successfully."});
                     }, function(){
+                      this.$swal({text: "Something is wrong.", type: "error"});
                     });
                   }else{
                     this.$http.post(url, this.contact).then(function(data){
@@ -138,8 +139,10 @@
                       this.contacts.push(this.contact);
 
                       this.contact = { date : '', totalTime : '', comment : '' };
+
+                      this.$swal({text: "Created successfully.", type: "success"});
                     }, function(){
-                      // TODO: handle error
+                      this.$swal({text: "Something is wrong.", type: "error"});
                   });
                   }
               }
@@ -151,8 +154,9 @@
                   this.contacts = this.contacts.filter(function (contact) {
                       return contact.id != id;
                   });
+                  this.$swal({text: "Deleted successfully.", type: "success"});
              },function(){
-               // TODO: handle error
+                  this.$swal({text: "Something is wrong.", type: "error"});
              });
           },
           edit: function(id){
