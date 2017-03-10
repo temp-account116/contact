@@ -107,56 +107,59 @@
 <script>
     export default {
         name : 'Contact',
-        url : 'http://localhost:8089/contacts',
         data() {
-            var url = 'http://localhost:8089/contacts';
-            this.$http.get(url).then(function(response){
+            this.$http.get(this.getUrl()).then(function(response){
                this.contacts = response.body;
             }, function(error){
                this.$swal({text: "Cannot load contacts.", type: "error"});
             });
-            return { 'contact': {date : '', totalTime : '', comment : ''},
+            return { 'contact': {},
                      'contacts': [] }
         },
         methods: {
+          getUrl() { return 'http://localhost:8089/contacts'},
+          success(message) { this.$swal({text: message, type: "success"}) }, // TODO: put these method in utility
+          error(message) { this.$swal({text: message, type: "error"}) }, // TODO: put these method in utility
+          setContact(newContact) {
+            this.contact = newContact;
+          },
+          clearContact() {
+            this.setContact({});
+          },
           onSubmit: function(e) {
               // TODO: find a better to check error
-              var url = 'http://localhost:8089/contacts';
               if( !!!this.contact.email || !!!this.contact.first_name || !!!this.contact.last_name || !!!this.contact.description){
-                 this.$swal({text: "Invalid input", type: "error"});
+                 this.error("Invalid input");
               }else{
                   // rails handle `create`/`update` in one form, hope I can do similary thing in vue...
                   if(!!this.contact.id){
-                    this.$http.put(url + '/' + this.contact.id, this.contact).then(function(data){
-                      this.contact = { date : '', totalTime : '', comment : '' };
-                      this.$swal({text: "Updated successfully."});
+                    this.$http.put(this.getUrl() + '/' + this.contact.id, this.contact).then(function(data){
+                      this.clearContact();
+                      this.success("Updated successfully.");
                     }, function(){
-                      this.$swal({text: "Something is wrong.", type: "error"});
+                      this.error("Something is wrong.");
                     });
                   }else{
-                    this.$http.post(url, this.contact).then(function(data){
+                    this.$http.post(this.getUrl(), this.contact).then(function(data){
                       this.contact.id = data.body.id;
                       this.contacts.push(this.contact);
-
-                      this.contact = { date : '', totalTime : '', comment : '' };
-
-                      this.$swal({text: "Created successfully.", type: "success"});
+                      this.clearContact();
+                      this.success("Created successfully.");
                     }, function(){
-                      this.$swal({text: "Something is wrong.", type: "error"});
+                      this.error("Something is wrong.");
                   });
-                  }
+                }
               }
             return false;
           },
           destroy: function(id){
-             var url = 'http://localhost:8089/contacts';
-             this.$http.delete(url + "/" + id).then(function(response){
+             this.$http.delete(this.getUrl() + "/" + id).then(function(response){
                   this.contacts = this.contacts.filter(function (contact) {
                       return contact.id != id;
                   });
-                  this.$swal({text: "Deleted successfully.", type: "success"});
+                  this.success("Deleted successfully.");
              },function(){
-                  this.$swal({text: "Something is wrong.", type: "error"});
+                  this.error("Something is wrong.");
              });
           },
           edit: function(id){
@@ -164,10 +167,10 @@
               return contact.id == id
             });
 
-            this.contact = contact;
+            this.setContact(contact);
           },
           newContact: function(){
-            this.contact = { date : '', totalTime : '', comment : '' };
+            this.clearContact();
           }
         }
     }
