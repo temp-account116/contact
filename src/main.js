@@ -6,12 +6,14 @@ import router from './router'
 
 import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
-import VeeValidate from 'vee-validate';
+import VeeValidate from 'vee-validate'
+import VueSweetAlert from 'vue-sweetalert'
 import _ from 'lodash'
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(VeeValidate)
+Vue.use(VueSweetAlert)
 
 import 'bootstrap/dist/css/bootstrap.css'
 Vue.config.productionTip = false
