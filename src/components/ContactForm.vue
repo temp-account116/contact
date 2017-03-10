@@ -1,6 +1,7 @@
 <template>
     <div class="contact col-md-8" >
         <table class="table col-sm-offset-2">
+       <button type="button" class="btn btn-success new-contact-button" v-on:click="newContact">Add new contact</button>
             <thead>
                 <tr>
                     <th>
@@ -160,6 +161,8 @@
             });
 
             this.contact = contact;
+          newContact: function(){
+            this.contact = { date : '', totalTime : '', comment : '' };
           }
         }
     }
