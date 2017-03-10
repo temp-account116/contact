@@ -1,7 +1,8 @@
 <template>
     <div class="contact col-md-8" >
-        <table class="table col-sm-offset-2">
+       <div class="col-sm-offset-2">
        <button type="button" class="btn btn-success new-contact-button" v-on:click="newContact">Add new contact</button>
+        <table class="table contact-table">
             <thead>
                 <tr>
                     <th>
@@ -42,14 +43,13 @@
                       {{ contact.description }}
                     </td>
                     <td>
-                       <button type="button" class="btn btn-primary"  v-on:click="clickEditButton(contact.id)">Edit</button>
-                       <button type="button" class="btn btn-danger"  v-on:click="destroy(contact.id)">Destroy</button>
+                       <button type="button" class="btn btn-primary" v-on:click="edit(contact.id)">Edit</button>
+                       <button type="button" class="btn btn-danger" v-on:click="destroy(contact.id)">Destroy</button>
                     </td>
                 </tr>
             </tbody>
         </table>
-
-
+    </div>
     <form class="form-horizontal" action="http://localhost:8089/contacts" method="post" v-on:submit.prevent="onSubmit">
        <input class="form-control hidden" v-model="contact.id">
         <div class="form-group">
@@ -96,7 +96,7 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-default">
-                    Submit
+                    {{ !!contact.id ? 'Edit': 'Create' }}
                 </button>
             </div>
         </div>
@@ -155,15 +155,30 @@
                // TODO: handle error
              });
           },
-          clickEditButton: function(id){
+          edit: function(id){
             var contact = _.find(this.contacts, function(contact){
               return contact.id == id
             });
 
             this.contact = contact;
+          },
           newContact: function(){
             this.contact = { date : '', totalTime : '', comment : '' };
           }
         }
     }
 </script>
+
+<style>
+.is-danger{
+  color: #a94442;
+}
+.new-contact-button{
+  float: right;
+  margin-bottom: 20px;
+  margin-right: 10px;
+}
+.contact-table{
+  text-align: right;
+}
+</style>
