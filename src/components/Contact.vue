@@ -120,15 +120,28 @@
           getUrl() { return 'http://localhost:8089/contacts'},
           success(message) { this.$swal({text: message, type: "success"}) }, // TODO: put these method in utility
           error(message) { this.$swal({text: message, type: "error"}) }, // TODO: put these method in utility
+          contactFields() { return ['id', 'email', 'first_name', 'last_name', 'description']},
+          // return false it it has null field
+          isValidContact(contact) {
+            var nullField = _.chain(this.contactFields()).
+                without("id").
+                find(function(field) {return !(!!contact[field]); }).value();
+
+            return !nullField;
+          },
           setContact(newContact) {
+            var self = this;
+            _.each(this.contactFields(), function(field){
+              self.errors.remove(field);
+            });
+
             this.contact = newContact;
           },
           clearContact() {
             this.setContact({});
           },
           onSubmit: function(e) {
-              // TODO: find a better to check error
-              if( !!!this.contact.email || !!!this.contact.first_name || !!!this.contact.last_name || !!!this.contact.description){
+              if( ! this.isValidContact(this.contact) ){
                  this.error("Invalid input");
               }else{
                   // rails handle `create`/`update` in one form, hope I can do similary thing in vue...
