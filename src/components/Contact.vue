@@ -183,14 +183,18 @@
         return false;
       },
       destroy: function(id) {
-        this.$http.delete(this.getUrl() + "/" + id).then(function(response) {
-          this.contacts = this.contacts.filter(function(contact) {
-            return contact.id != id;
-          });
-          this.success("Deleted successfully.");
-        }, function() {
-          this.error("Something is wrong.");
-        });
+        var self = this;
+        this.$swal({text: "Are you sure?", showCancelButton: true }).
+          then(function(){
+            self.$http.delete(self.getUrl() + "/" + id).then(function(response) {
+              self.contacts = self.contacts.filter(function(contact) {
+                return contact.id != id;
+              });
+              self.success("Deleted successfully.");
+              }, function() {
+                self.error("Something is wrong.");
+              });
+          }, function() {});
       },
       edit: function(id) {
         var contact = _.find(this.contacts, function(contact) {
